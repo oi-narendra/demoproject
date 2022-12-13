@@ -6,13 +6,15 @@
     <%= turbo_frame_tag dom_id(@post) do %>
       <%= render partial: 'post', locals: { post: @post } %>
     <% end %>
-    <%= turbo_frame_tag "comments_index_frame" do%>
-      <% @post.comments.each do |comment| %>
+    <%= turbo_frame_tag "comments_index_frame" do %>
+      <h1 class="text-2xl font-medium mb-5">Comments</h1>
+      <% @post.comments.order(created_at: :desc).each do |comment| %>
         <%= turbo_frame_tag dom_id(comment) do %>
           <%= render partial: 'comments/comment', locals: { comment: comment } %>
         <% end %>
+        <hr style="margin-top: 1rem; margin-bottom: 1rem;">
       <% end %>
     <% end %>
-    <%= turbo_frame_tag 'new_comment', src: '/comments/new' %>
+    <%= turbo_frame_tag 'new_comment', src: new_post_comment_path(@post) %>
   </div>
 </div>

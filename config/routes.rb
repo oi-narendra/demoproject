@@ -1,8 +1,11 @@
 Rails.application.routes.draw do
-  resources :replies
-  resources :comments
   resources :users
-  resources :posts
+  resources :posts do 
+    resources :comments do 
+      resource :reply
+    end
+  end
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")

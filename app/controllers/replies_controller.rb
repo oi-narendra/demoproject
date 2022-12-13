@@ -1,5 +1,5 @@
 class RepliesController < ApplicationController
-  before_action :set_reply, only: %i[ show edit update destroy ]
+  before_action :set_reply, only: %i[ show edit update]
    skip_before_action :verify_authenticity_token, only: [:destroy]
 
   # GET /replies or /replies.json
@@ -14,6 +14,8 @@ class RepliesController < ApplicationController
   # GET /replies/new
   def new
     @reply = Reply.new
+    @comment = Comment.find(params[:comment_id])
+    @post = @comment.post
   end
 
   # GET /replies/1/edit
@@ -23,11 +25,12 @@ class RepliesController < ApplicationController
   # POST /replies or /replies.json
   def create
     @reply = Reply.new(reply_params)
-
+    @comment = Comment.find(params[:comment_id])
+    @reply.comment = @comment
+    @reply.user_id = 1
     respond_to do |format|
       if @reply.save
-        format.html { redirect_to reply_url(@reply), notice: "Reply was successfully created." }
-        format.json { render :show, status: :created, location: @reply }
+        format.turbo_stream { render turbo_stream: turbo_stream.replace(@comment, partial: "comments/comment", locals: { comment: @comment, post: @comment.post }) }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @reply.errors, status: :unprocessable_entity }
@@ -49,9 +52,11 @@ class RepliesController < ApplicationController
 
   # DELETE /replies/1 or /replies/1.json
   def destroy
+    @comment = Comment.find(params[:comment_id])
+    @reply = @comment.reply
     @reply.destroy
-
     respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace(@comment, partial: "comments/comment", locals: { comment: @comment, post: @comment.post }) }
       format.html { redirect_to replies_url, notice: "Reply was successfully destroyed." }
       format.json { head :no_content }
     end
@@ -65,6 +70,6 @@ class RepliesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def reply_params
-      params.require(:reply).permit(:description, :comment_id, :user_id)
+      params.require(:reply).permit(:description)
     end
 end

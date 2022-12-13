@@ -1,11 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static values = { id: Number }
+    static values = { id: Number, commentId: Number, postId: Number }
 
     connect() {
         console.log("Replies controller connected")
-        console.log(this.idValue)
+        console.table(this.idValue, this.commentIdValue, this.postIdValue)
+
     }
 
     editReply(event) {
@@ -37,7 +38,7 @@ export default class extends Controller {
     }
 
     deleteReply(event) {
-        fetch('/replies/' + this.idValue, {
+        fetch(this.postIdValue + '/comments/' + this.commentIdValue + '/reply', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static values = { id: Number }
+    static values = { id: Number, postId: Number }
 
     connect() {
         console.log("Comments controller connected")
@@ -20,6 +20,8 @@ export default class extends Controller {
         cancelEditcommentbutton.style.display = "block"
         let deleteCommentButton = document.getElementById(`delete-comment-${this.idValue}-button`)
         deleteCommentButton.style.display = "none"
+        let replyCommentButton = document.getElementById(`reply-comment-${this.idValue}-button`)
+        replyCommentButton.style.display = "none"
     }
 
     cancelEditComment(event) {
@@ -34,10 +36,12 @@ export default class extends Controller {
         cancelEditcommentbutton.style.display = "none"
         let deleteCommentButton = document.getElementById(`delete-comment-${this.idValue}-button`)
         deleteCommentButton.style.display = "block"
+        let replyCommentButton = document.getElementById(`reply-comment-${this.idValue}-button`)
+        replyCommentButton.style.display = "block"
     }
 
     deleteComment(event) {
-        fetch('/comments/' + this.idValue, {
+        fetch(this.postIdValue + '/comments/' + this.idValue, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

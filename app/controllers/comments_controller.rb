@@ -15,6 +15,7 @@ class CommentsController < ApplicationController
   # GET /comments/new
   def new
     @comment = Comment.new
+    @post = Post.find(params[:post_id])
   end
 
   # GET /comments/1/edit
@@ -23,11 +24,14 @@ class CommentsController < ApplicationController
 
   # POST /comments or /comments.json
   def create
-    @comment = Comment.new(comment_params)
-
+    @post = Post.find(params[:post_id])
+    @comment = @post.comments.build(comment_params)
+    @comment.user_id = 1
     respond_to do |format|
       if @comment.save
-        format.html { redirect_to comment_url(@comment), notice: "Comment was successfully created." }
+        format.turbo_stream {render turbo_stream: [
+          turbo_stream.prepend("comments_index_frame", partial: "comments/comment", locals: { comment: @comment }),
+          turbo_stream.replace("new_comment", partial: "comments/form", locals: { comment: Comment.new, post: @post })] }
         format.json { render :show, status: :created, location: @comment }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -67,6 +71,6 @@ class CommentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def comment_params
-      params.require(:comment).permit(:description, :user_id, :post_id)
+      params.require(:comment).permit(:description, :post_id)
     end
 end
