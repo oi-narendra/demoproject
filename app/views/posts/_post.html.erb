@@ -1,0 +1,21 @@
+<div id="<%= dom_id post %>" data-controller="posts">
+  <div id="post">
+    <p class="my-5">
+      <strong class="block font-medium mb-1">Title:</strong>
+      <%= post.title %>
+    </p>
+    <p class="my-5">
+      <strong class="block font-medium mb-1">Description:</strong>
+      <%= post.description %>
+    </p>
+  </div>
+  <div id="post-form" style="display: none;">
+    <%= render 'form', post: @post %>
+  </div>
+  <a data-action="click->posts#editPost" id="edit-post-button"> 
+    Edit Post
+  </a>
+  <a data-action="click->posts#cancelEditPost" id="cancel-edit-post-button" style="display: none;"> 
+    Cancel
+  </a>
+</div>

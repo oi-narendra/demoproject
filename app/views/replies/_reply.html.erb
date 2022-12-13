@@ -1,0 +1,31 @@
+<%= turbo_frame_tag dom_id(reply) do %>
+  <div data-controller="replies" data-replies-id-value=<%=reply.id%>>
+    <div id="reply-<%=reply.id%>" >
+      <p class="my-5">
+        <strong class="block font-medium mb-1">Description:</strong>
+        <%= reply.description %>
+      </p>
+      <p class="my-5">
+        <strong class="block font-medium mb-1">Comment:</strong>
+        <%= reply.comment_id %>
+      </p>
+      <p class="my-5">
+        <strong class="block font-medium mb-1">User:</strong>
+        <%= reply.user_id %>
+      </p>
+    </div>
+    <div id="reply-<%=reply.id%>-form" style="display: none;">
+      <%= render 'replies/form', reply: reply %>
+    </div>
+    <a data-action="click->replies#editReply" id="edit-reply-<%=reply.id%>-button"> 
+      Edit reply
+    </a>
+    <a data-action="click->replies#deleteReply" id="delete-reply-<%=reply.id%>-button"> 
+      Delete reply
+    </a>
+    <a data-action="click->replies#cancelEditReply" id="cancel-edit-reply-<%=reply.id%>-button" style="display: none;"> 
+      Cancel
+    </a>
+    <hr class="mt-6">
+  </div>
+<% end %>

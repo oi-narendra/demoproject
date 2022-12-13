@@ -1,0 +1,5 @@
+ <%= turbo_frame_tag 'new_comment' do %>
+  <div class="mx-auto md:w-2/3 w-full">
+    <%= render "form", comment: @comment %>
+  </div>
+<%end %>

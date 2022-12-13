@@ -1,0 +1,18 @@
+<div class="mx-auto md:w-2/3 w-full flex" >
+  <div class="mx-auto">
+    <% if notice.present? %>
+      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+    <% end %>
+    <%= turbo_frame_tag dom_id(@post) do %>
+      <%= render partial: 'post', locals: { post: @post } %>
+    <% end %>
+    <%= turbo_frame_tag "comments_index_frame" do%>
+      <% @post.comments.each do |comment| %>
+        <%= turbo_frame_tag dom_id(comment) do %>
+          <%= render partial: 'comments/comment', locals: { comment: comment } %>
+        <% end %>
+      <% end %>
+    <% end %>
+    <%= turbo_frame_tag 'new_comment', src: '/comments/new' %>
+  </div>
+</div>

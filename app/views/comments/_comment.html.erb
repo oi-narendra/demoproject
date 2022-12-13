@@ -1,0 +1,31 @@
+<%= turbo_frame_tag dom_id(comment) do %>
+  <div  data-controller="comments" data-comments-id-value=<%=comment.id%> >
+    <div id="comment-<%=comment.id%>">
+      <p class="my-5">
+        <strong class="block font-medium mb-1">Description:</strong>
+        <%= comment.description %>
+      </p>
+      <p class="my-5">
+        <strong class="block font-medium mb-1">User:</strong>
+        <%= comment.user_id %>
+      </p>
+    </div>
+    <div id="comment-<%=comment.id%>-form" style="display: none;">
+      <%= render 'comments/form', comment: comment %>
+    </div>
+    <a data-action="click->comments#editComment" id="edit-comment-<%=comment.id%>-button"> 
+      Edit Comment
+    </a>
+    <a data-action="click->comments#deleteComment" id="delete-comment-<%=comment.id%>-button"> 
+      Delete Comment
+    </a>
+    <a data-action="click->comments#cancelEditComment" id="cancel-edit-comment-<%=comment.id%>-button" style="display: none;"> 
+      Cancel
+    </a>
+    <hr class="mt-6">
+    <% if comment.reply.present? %>
+      <%= turbo_frame_tag dom_id(comment.reply) do %>
+        <%= render partial: 'replies/reply', locals: { reply: comment.reply } %>
+      <% end %>
+    <%end %>
+  <%end %>
